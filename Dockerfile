@@ -15,6 +15,8 @@ RUN rm /opt/Python-${PYTHON_VERSION}.tgz /opt/Python-${PYTHON_VERSION} -rf
 
 FROM python-install as app
 
+EXPOSE 8081
+
 ADD . /app
 WORKDIR /app
 RUN pip3 install -r requirements.txt

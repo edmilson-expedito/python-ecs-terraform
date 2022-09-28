@@ -1,0 +1,27 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "sts:GetSessionToken",
+                "sts:DecodeAuthorizationMessage",
+                "sts:GetAccessKeyInfo",
+                "sts:GetCallerIdentity",
+                "sts:GetServiceBearerToken"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": "sts:*",
+            "Resource": [
+                "arn:aws:kinesis:us-east-1:056220726743:stream/yhub-yandeh-plataforma-futuro-056220726743-dev",
+                "arn:aws:iam::056220726743:role/yhub-yandeh-cross-account/*",
+                "arn:aws:iam::056220726743:role/yhub-yandeh-cross-account"
+            ]
+        }
+    ]
+}

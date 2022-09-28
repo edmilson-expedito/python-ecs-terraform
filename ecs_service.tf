@@ -1,23 +1,25 @@
-resource "aws_ecs_cluster" "cluster_python" {
-  name = "my-cluster" # Naming the cluster
+resource "aws_ecs_cluster" "aws-ecs-cluster" {
+  name = "${var.app_name}-${var.env_name}-cluster"
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
+  tags = {
+    Name        = "${var.app_name}-${var.env_name}-ecs-cluster"
+    Environment = local.app_environment
+    Application = var.app_name
+  }
 }
 
-resource "aws_ecs_service" "my_first_service" {
-  name            = "my-first-service"                             # Naming our first service
-  cluster         = "${aws_ecs_cluster.cluster_python.id}"             # Referencing our created Cluster
-  task_definition = "${aws_ecs_task_definition.task_python.arn}" # Referencing the task our service will spin up
-  launch_type     = "FARGATE"
-  desired_count   = 3 # Setting the number of containers we want deployed to 3
-
+resource "aws_ecs_service" "aws-ecs-service" {
+  name                 = "${var.app_name}-${var.env_name}-ecs-service"
+  cluster              = aws_ecs_cluster.aws-ecs-cluster.id
+  task_definition      = aws_ecs_task_definition.aws-ecs-service.arn
+  iam_role             = aws_iam_role.aws_iam_ecs_role.arn
+  depends_on           = [aws_iam_role_policy.iam-ecs-role]
   load_balancer {
-    target_group_arn = "${aws_lb_target_group.target_group.arn}" # Referencing our target group
-    container_name   = "${aws_ecs_task_definition.task_python.family}"
-    container_port   = 80 # Specifying the container port
-  }
-
-  network_configuration {
-    subnets          = ["${aws_default_subnet.default_subnet_a.id}", "${aws_default_subnet.default_subnet_b.id}", "${aws_default_subnet.default_subnet_c.id}"]
-    assign_public_ip = true # Providing our containers with public IPs
-    security_groups  = ["${aws_security_group.service_security_group.id}"] # Setting the security group
+    target_group_arn = aws_lb_target_group.target_group[0].arn
+    container_name   = "${var.app_name}-${var.env_name}-container"
+    container_port   = var.container_port
   }
 }

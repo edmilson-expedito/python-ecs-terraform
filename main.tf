@@ -4,6 +4,10 @@ provider "aws" {
 
 resource "aws_ecr_repository" "my_first_ecr_repo" {
   name = "my-first-ecr-repo" # Naming my repository
+  image_tag_mutability = "MUTABLE"
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
 
 resource "aws_ecs_cluster" "my_cluster" {
@@ -67,7 +71,7 @@ resource "aws_ecs_service" "my_first_service" {
   load_balancer {
     target_group_arn = "${aws_lb_target_group.target_group.arn}" # Referencing our target group
     container_name   = "${aws_ecs_task_definition.my_first_task.family}"
-    container_port   = 80 # Specifying the container port
+    container_port   = 8081 # Specifying the container port
   }
 
   network_configuration {

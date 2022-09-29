@@ -1,0 +1,7 @@
+AWS_PROFILE=myselfrock aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 981040552737.dkr.ecr.us-east-1.amazonaws.com
+
+docker build -t my-first-ecr-repo .
+
+docker tag my-first-ecr-repo:latest 981040552737.dkr.ecr.us-east-1.amazonaws.com/my-first-ecr-repo:latest
+
+docker push 981040552737.dkr.ecr.us-east-1.amazonaws.com/my-first-ecr-repo:latest
